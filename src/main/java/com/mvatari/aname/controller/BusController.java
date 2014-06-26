@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mvatari.aname.beans.Bus;
@@ -44,7 +45,7 @@ public class BusController {
 	@RequestMapping(value="/buses/{id}", method=RequestMethod.GET)
 	public @ResponseBody List<Bus> getBuses(@PathVariable Long id, HttpServletResponse resp) {
 		try {
-			ArrayList<Bus> a = new ArrayList<Bus>();
+			List<Bus> a = new ArrayList<Bus>();
 			a.add(buses.get(id.intValue()));
 			return a;
 		} catch (IndexOutOfBoundsException ioobe) {
@@ -58,6 +59,17 @@ public class BusController {
 		return buses;
 	}
 	
+	@RequestMapping(value="/buses", method=RequestMethod.POST)
+	public @ResponseBody 
+		   List<Bus> getBuses2(@RequestParam(value="access_token", required=true) String accessToken,
+				   			   HttpServletResponse resp) {
+		if (!accessToken.equals("123456")) {
+			resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		}
+		return buses;
+	}
+
 	@RequestMapping(value="/hello")
 	public @ResponseBody Map<String, Object> hello() {
 		Bus b = new Bus();
